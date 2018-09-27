@@ -3,6 +3,10 @@ const app = express();
 const bodyParser = require('body-parser');
 const port = 3000;
 
+//for accepts-content matching
+const html = 'text/html';
+const json = 'application/json';
+
 const routes = [
     {
         method: 'get',
@@ -36,27 +40,39 @@ startServer();
 
 
 function getAllRouteDescriptions(req, res) {
-    res.send( routes.map(route => `${route.method.toUpperCase()} ${route.path} –– ${route.description}`) );
+    const routeInfo = routes.map(route => ({
+        method: route.method,
+        path: route.path,
+        description: route.description
+    }));
+
+    res.format({
+        html: () => res.render('allRouteDescriptions', {routes: routeInfo}),
+        json: () => res.json(routeInfo)
+    });
+    //res.send(routes.map(route => `${route.method.toUpperCase()} ${route.path} –– ${route.description}`));
 }
 
 function getAllPins(req, res) {
-    res.send( '[all pins]' );
+    res.send('[all pins]');
 }
 
 function getPin(req, res) {
     const pinId = req.params['id'];
-    res.send( `Status for pin ${pinId}` );
+    res.send(`Status for pin ${pinId}`);
 }
 
 function setPin(req, res) {
     const pinId = req.params['id'];
     const body = req.body || {};
     const newState = body.state;
-    res.send( `Set pin ${pinId} to ${newState}` );
+    res.send(`Set pin ${pinId} to ${newState}`);
 }
 
 function initialConfiguration() {
     app.use(bodyParser.json());
+    app.engine('mustache', require('mustache-express')());
+    app.set('view engine', 'mustache')
 }
 
 function setupRouting() {
