@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const port = 3000;
 
 const routes = [
@@ -29,6 +30,7 @@ const routes = [
     }
 ];
 
+initialConfiguration();
 setupRouting();
 startServer();
 
@@ -48,8 +50,13 @@ function getPin(req, res) {
 
 function setPin(req, res) {
     const pinId = req.params['id'];
-    const state = req.body.state;
-    res.send( `Set pin ${pinId} to ${state}` );
+    const body = req.body || {};
+    const newState = body.state;
+    res.send( `Set pin ${pinId} to ${newState}` );
+}
+
+function initialConfiguration() {
+    app.use(bodyParser.json());
 }
 
 function setupRouting() {
@@ -57,7 +64,6 @@ function setupRouting() {
 }
 
 function startServer() {
-    app.use(require('body-parser').json());
     app.listen(port, () => console.log(`GPIO app listening on port ${port}!`));
 }
 
