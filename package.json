@@ -1,0 +1,19 @@
+{
+  "name": "api-for-raspberry-pi-gpio",
+  "version": "1.0.0",
+  "description": "A Node REST API in Express to remote control a Raspberry Pi gpio pins",
+  "main": "server.js",
+  "scripts": {
+    "test": "mocha -b"
+  },
+  "keywords": [
+    "raspberry",
+    "pi",
+    "gpio"
+  ],
+  "author": "Marty Kane",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}
