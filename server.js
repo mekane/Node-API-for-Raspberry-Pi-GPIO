@@ -34,6 +34,8 @@ const routes = [
     }
 ];
 
+const gpio = require('./gpio');
+
 initialConfiguration();
 setupRouting();
 startServer();
@@ -50,11 +52,15 @@ function getAllRouteDescriptions(req, res) {
         html: () => res.render('allRouteDescriptions', {routes: routeInfo}),
         json: () => res.json(routeInfo)
     });
-    //res.send(routes.map(route => `${route.method.toUpperCase()} ${route.path} –– ${route.description}`));
 }
 
 function getAllPins(req, res) {
-    res.send('[all pins]');
+    const allPins = gpio.getAllPinStatuses();
+
+    res.format({
+        html: () => res.render('allPinsStatus', {pins: allPins}),
+        json: () => res.json(allPins)
+    });
 }
 
 function getPin(req, res) {
