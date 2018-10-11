@@ -58,9 +58,17 @@ function getAllPins(req, res) {
     const allPins = gpio.getAllPinStatuses();
 
     res.format({
-        html: () => res.render('allPinsStatus', {pins: allPins}),
+        html: () => res.render('allPinsStatus', {pins: allPinStatusesForHtml()}),
         json: () => res.json(allPins)
     });
+
+    function allPinStatusesForHtml() {
+      return Object.keys(allPins).map(id => {
+        const pin = allPins[id];
+        pin['id'] = id;
+        return pin;
+      })
+    }
 }
 
 function getPin(req, res) {
@@ -88,4 +96,3 @@ function setupRouting() {
 function startServer() {
     app.listen(port, () => console.log(`GPIO app listening on port ${port}!`));
 }
-

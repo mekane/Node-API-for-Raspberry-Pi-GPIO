@@ -1,1 +1,13 @@
-TODO
+<dl>
+    {{ #pins }}
+    <dt>
+        <code>{{ id }}</code>
+        <a href="/pin/{{ id }}">/pin/{{ id }}</a>
+    </dt>
+    <dd>
+      mode: {{ mode }}<br>
+      level: {{ level }}<br>
+      pwm: {{ pwm }}
+    </dd>
+    {{ /pins }}
+</dl>
