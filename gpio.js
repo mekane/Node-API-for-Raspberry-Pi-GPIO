@@ -26,26 +26,42 @@ function getAllPinStatuses() {
 function getPinStatus(pinId) {
   const gpioForPin = pin[pinId];
 
-  return {
-    mode: gpioForPin.getMode(),
-    level: gpioForPin.digitalRead(),
-    pwm: gpioForPin.getPwmDutyCycle()
-  };
+  if (gpioForPin)
+    return {
+      mode: gpioForPin.getMode(),
+      level: gpioForPin.digitalRead(),
+      pwm: gpioForPin.getPwmDutyCycle()
+    };
+  else
+    return {};
 }
 
 function getColor() {
-  //get PWM duty cycles and convert to color codes
+  const redPwm = redPin.getPwmDutyCycle();
+  const greenPwm = greenPin.getPwmDutyCycle();
+  const bluePwm = bluePin.getPwmDutyCycle();
+
+  return {
+    red: 255 - redPwm,
+    green: 255 - greenPwm,
+    blue: 255 - bluePwm
+  }
 }
 
 function setColor(redVal, greenVal, blueVal) {
+  //TODO: sanitize these values and clamp to 0-255
 
+  redPin.pwmWrite(255-redVal);
+  greenPin.pwmWrite(255-greenVal);
+  bluePin.pwmWrite(255-blueVal);
 }
 
 function mockGpio() {
   return {
     getMode: () => 'OUTPUT',
     digitalRead: () => 0,
-    getPwmDutyCycle: () => 0
+    getPwmDutyCycle: () => 0,
+    pwmWrite: () => {}
   }
 }
 mockGpio.OUTPUT = 'output';

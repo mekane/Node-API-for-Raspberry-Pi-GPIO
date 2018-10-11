@@ -30,6 +30,18 @@ const routes = [{
     path: '/pin/:id',
     description: 'Sets the status of a pin to on or off',
     handler: setPin
+  },
+  {
+    method: 'get',
+    path: '/color',
+    description: 'Gets the RGB value currently set',
+    handler: getColor
+  },
+  {
+    method: 'put',
+    path: '/color',
+    description: 'Sets the RGB value using JSON {red:<val>, green:<val>, blue:<val>}',
+    handler: setColor
   }
 ];
 
@@ -93,6 +105,28 @@ function setPin(req, res) {
   const newState = body.state;
   res.send(`Set pin ${pinId} to ${newState}`);
 }
+
+function getColor(req, res) {
+  const rgb = gpio.getColor();
+
+  res.format({
+    html: () => res.render('rgbColor', { color: rgb }),
+    json: () => res.json(rgb)
+  })
+}
+
+function setColor(req, res) {
+  const body = req.body || {};
+  const red = body.red || 0;
+  const green = body.green || 0;
+  const blue = body.blue || 0;
+
+  gpio.setColor(red, green, blue);
+
+  res.send(`setColor(${red}, ${green}, ${blue})`);
+}
+
+
 
 function initialConfiguration() {
   app.use(bodyParser.json());
