@@ -73,7 +73,12 @@ function getAllPins(req, res) {
 
 function getPin(req, res) {
     const pinId = req.params['id'];
-    res.send(`Status for pin ${pinId}`);
+    const pinStatus = gpio.getPinStatus(pinId);
+
+    res.format({
+      html: () => res.render('pinStatus', {id: pinId, pin: pinStatus}),
+      json: () => res.json(pinStatus)
+    });
 }
 
 function setPin(req, res) {
