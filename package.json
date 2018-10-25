@@ -4,6 +4,7 @@
   "description": "A Node REST API in Express to remote control a Raspberry Pi gpio pins",
   "main": "server.js",
   "scripts": {
+    "devel": "TEST=true npm start",
     "debug": "DEBUG=express:* npm start",
     "test": "mocha -b"
   },
