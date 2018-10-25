@@ -108,10 +108,7 @@ function setPin(req, res) {
 
   const result = gpio.setPinStatus(pinId, newState);
 
-  res.format({
-    html: () => (result ? 'OK' : 'Failed to set pin status'),
-    json: () => res.json({result})
-  });
+  res.send(result);
 }
 
 function getColor(req, res) {
