@@ -22,12 +22,15 @@
     function setColor(red, green, blue) {
       $.ajax(apiPath, {
         method: 'PUT',
-        data: {
-          red: red,
-          green: green,
-          blue: blue
-        }
-      })
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "red": red,
+          "green": green,
+          "blue": blue
+        }),
+        dataType: 'json',
+        processData: false
+      });
     }
 
     function colorChanged(newHexColor) {

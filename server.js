@@ -2,6 +2,7 @@
 
 const express = require('express');
 const app = express();
+const accessLogger = require('./accessLogger');
 const bodyParser = require('body-parser');
 const port = 3000;
 
@@ -135,6 +136,7 @@ function setColor(req, res) {
 
 function initialConfiguration() {
   app.use(bodyParser.json());
+  app.use(accessLogger);
   app.use(express.static('public'));
   app.engine('mustache', require('mustache-express')());
   app.set('view engine', 'mustache')
