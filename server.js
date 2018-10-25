@@ -134,6 +134,8 @@ function initialConfiguration() {
   app.use(bodyParser.json());
   app.engine('mustache', require('mustache-express')());
   app.set('view engine', 'mustache')
+
+  gpio.setColor(0, 0, 0);
 }
 
 function setupRouting() {
