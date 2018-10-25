@@ -2,25 +2,36 @@
 
 <head>
   <title>Interactive Color Picker</title>
+  <style>
+    .button-container {
+      margin-top: 10vw;
+    }
+
+    .button-container__on-button,
+    .button-container__off-button {
+      width: 45vw;
+      height: 20vh;
+    }
+  </style>
 </head>
 
 <body>
   Color Picker
   <div class="color-picker"></div>
 
+  <div class="button-container">
+    <button class="button-container__on-button">Green Light On</button>
+    <button class="button-container__off-button">Green Light Off</button>
+  </div>
+
   <script src="jquery-1.12.4.min.js"></script>
   <script src="jquery.mousewheel.min.js"></script>
   <script src="jquery.colorpicker.js"></script>
   <script>
-    var apiPath = 'http://' +location.host + '/color'
-
-    var colorPicker = new jQuery.ColorPicker('.color-picker', {
-      imagepath: '../images/',
-      change: colorChanged
-    });
+    var apiPath = 'http://' + location.host;
 
     function setColor(red, green, blue) {
-      $.ajax(apiPath, {
+      $.ajax(apiPath + '/color', {
         method: 'PUT',
         contentType: 'application/json',
         data: JSON.stringify({
@@ -41,6 +52,33 @@
 
       setColor(r, g, b);
     }
+
+    function setGreenLight(state) {
+      $.ajax(apiPath + '/pin/23', {
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          "state": state
+        }),
+        dataType: 'json',
+        processData: false
+      });
+    }
+
+    $(function() {
+      var colorPicker = new jQuery.ColorPicker('.color-picker', {
+        imagepath: '../images/',
+        change: colorChanged
+      });
+
+      $('.button-container__on-button').on('click', function(e) {
+        setGreenLight(1);
+      });
+
+      $('.button-container__off-button').on('click', function(e) {
+        setGreenLight(0);
+      });
+    });
   </script>
 </body>
 
