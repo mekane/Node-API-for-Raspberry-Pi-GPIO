@@ -1,0 +1,44 @@
+<html>
+
+<head>
+  <title>Interactive Color Picker</title>
+</head>
+
+<body>
+  Color Picker
+  <div class="color-picker"></div>
+
+  <script src="jquery-1.12.4.min.js"></script>
+  <script src="jquery.mousewheel.min.js"></script>
+  <script src="jquery.colorpicker.js"></script>
+  <script>
+    var apiPath = 'http://' +location.host + '/color'
+
+    var colorPicker = new jQuery.ColorPicker('.color-picker', {
+      imagepath: '../images/',
+      change: colorChanged
+    });
+
+    function setColor(red, green, blue) {
+      $.ajax(apiPath, {
+        method: 'PUT',
+        data: {
+          red: red,
+          green: green,
+          blue: blue
+        }
+      })
+    }
+
+    function colorChanged(newHexColor) {
+      var rgb = hexToRgb(newHexColor);
+      var r = rgb[0];
+      var g = rgb[1];
+      var b = rgb[2];
+
+      setColor(r, g, b);
+    }
+  </script>
+</body>
+
+</html>

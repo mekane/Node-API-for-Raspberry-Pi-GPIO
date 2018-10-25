@@ -135,6 +135,7 @@ function setColor(req, res) {
 
 function initialConfiguration() {
   app.use(bodyParser.json());
+  app.use(express.static('public'));
   app.engine('mustache', require('mustache-express')());
   app.set('view engine', 'mustache')
 
