@@ -1,0 +1,2 @@
+echo "Turning green light OFF"
+/home/marty/bin/setPinApi 23 0
