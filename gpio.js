@@ -1,3 +1,5 @@
+'use strict';
+
 const Gpio = loadGpioModule();
 
 const OutputMode = {
@@ -7,12 +9,13 @@ const OutputMode = {
 const pin = {
   '12': new Gpio(12, OutputMode),
   '13': new Gpio(13, OutputMode),
-  '18': new Gpio(18, OutputMode)
+  '18': new Gpio(18, OutputMode),
+  '23': new Gpio(23, OutputMode)
 };
 
-redPin = pin['13'];
-greenPin = pin['12'];
-bluePin = pin['18'];
+const redPin = pin['13'];
+const greenPin = pin['12'];
+const bluePin = pin['18'];
 
 function getAllPinStatuses() {
   const result = {};
@@ -26,14 +29,39 @@ function getAllPinStatuses() {
 function getPinStatus(pinId) {
   const gpioForPin = pin[pinId];
 
+  const mode = gpioForPin.getMode();
+  let level = 'unknown';
+  let pwm = '-';
+
+  try {
+    level = gpioForPin.digitalRead();
+  } catch (e) {}
+
+  try {
+    pwm = gpioForPin.getPwmDutyCycle()
+  } catch (e) {}
+
   if (gpioForPin)
     return {
-      mode: gpioForPin.getMode(),
-      level: gpioForPin.digitalRead(),
-      pwm: gpioForPin.getPwmDutyCycle()
+      mode,
+      level,
+      pwm
     };
   else
     return {};
+}
+
+function setPinStatus(pinId, newState) {
+  const gpioForPin = pin[pinId];
+  const newLevel = !!newState;
+
+  if (gpioForPin /* && mode == 'OUTPUT' */) {
+    gpioForPin.digitalWrite(newLevel);
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 function getColor() {
@@ -51,15 +79,16 @@ function getColor() {
 function setColor(redVal, greenVal, blueVal) {
   //TODO: sanitize these values and clamp to 0-255
 
-  redPin.pwmWrite(255-redVal);
-  greenPin.pwmWrite(255-greenVal);
-  bluePin.pwmWrite(255-blueVal);
+  redPin.pwmWrite(255 - redVal);
+  greenPin.pwmWrite(255 - greenVal);
+  bluePin.pwmWrite(255 - blueVal);
 }
 
 function mockGpio() {
   return {
     getMode: () => 'OUTPUT',
     digitalRead: () => 0,
+    digitalWrite: () => 0,
     getPwmDutyCycle: () => 0,
     pwmWrite: () => {}
   }
@@ -77,5 +106,6 @@ module.exports = {
   getAllPinStatuses,
   getColor,
   getPinStatus,
-  setColor
+  setColor,
+  setPinStatus
 };
