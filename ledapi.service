@@ -4,7 +4,7 @@ Description=Node API server for RGB LED
 [Service]
 ExecStart=/home/marty/Projects/Node-API-for-Raspberry-Pi-GPIO/server.js
 Restart=always
-User=nobody
+User=root
 # Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
 Group=nogroup
 Environment=PATH=/usr/bin:/usr/local/bin
