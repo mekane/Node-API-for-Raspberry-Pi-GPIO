@@ -142,6 +142,7 @@ function initialConfiguration() {
   app.set('view engine', 'mustache')
 
   gpio.setColor(0, 0, 0);
+  gpio.setPinStatus(23, 0);
 }
 
 function setupRouting() {
