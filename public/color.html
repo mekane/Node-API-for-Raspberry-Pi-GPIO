@@ -3,14 +3,28 @@
 <head>
   <title>Interactive Color Picker</title>
   <style>
-    .button-container {
+    .button-container,
+    .clock-container {
       margin-top: 10vw;
     }
 
+    .button-container__header,
+    .clock-container__header {
+      font-size: 20px;
+      color: #999;
+    }
+
     .button-container__on-button,
-    .button-container__off-button {
-      width: 45vw;
-      height: 20vh;
+    .button-container__off-button,
+    .clock-container__off-button,
+    .clock-container__sleep-button,
+    .clock-container__orange-button,
+    .clock-container__yellow-button,
+    .clock-container__green-button {
+      font-size: 18px;
+      height: 80px;
+      margin-top: 20px;
+      width: 50%;
     }
   </style>
 </head>
@@ -20,9 +34,20 @@
   <div class="color-picker"></div>
 
   <div class="button-container">
+    <header class="button-container__header">Green Light</header>
     <button class="button-container__on-button">Green Light On</button>
     <button class="button-container__off-button">Green Light Off</button>
   </div>
+
+  <div class="clock-container">
+    <header class="clock-container__header">Clock Functions</header>
+    <button class="clock-container__off-button">Everything Off</button>
+    <button class="clock-container__sleep-button">Sleep Time</button>
+    <button class="clock-container__orange-button">10 Min Warning</button>
+    <button class="clock-container__yellow-button">5 Min Warning</button>
+    <button class="clock-container__green-button">Wake Up!</button>
+  </div>
+
 
   <script src="jquery-1.12.4.min.js"></script>
   <script src="jquery.mousewheel.min.js"></script>
@@ -78,6 +103,32 @@
       $('.button-container__off-button').on('click', function(e) {
         setGreenLight(0);
       });
+
+      $('.clock-container__off-button').on('click', function(e) {
+        setGreenLight(0);
+        setColor(0, 0, 0);
+      });
+
+      $('.clock-container__sleep-button').on('click', function(e) {
+        setGreenLight(0);
+        setColor(255, 0, 0);
+      });
+
+      $('.clock-container__orange-button').on('click', function(e) {
+        setGreenLight(0);
+        setColor(255, 55, 0);
+      });
+
+      $('.clock-container__yellow-button').on('click', function(e) {
+        setGreenLight(0);
+        setColor(255, 100, 0);
+      });
+
+      $('.clock-container__green-button').on('click', function(e) {
+        setGreenLight(1);
+        setColor(0, 255, 0);
+      });
+
     });
   </script>
 </body>
