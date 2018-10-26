@@ -55,6 +55,15 @@
   <script>
     var apiPath = 'http://' + location.host;
 
+    function getColor() {
+      $.ajax(apiPath + '/color', {
+        dataType: 'json',
+        success: function(d) {
+          initColorPicker(d.red, d.green, d.blue);
+        }
+      });
+    }
+
     function setColor(red, green, blue) {
       $.ajax(apiPath + '/color', {
         method: 'PUT',
@@ -90,11 +99,19 @@
       });
     }
 
-    $(function() {
+    function initColorPicker(initialRed, initialGreen, initialBlue) {
+      const initialHex = rgbToHex(initialRed, initialGreen, initialBlue);
+      console.log(`Init color picker to ${initialHex}`);
+
       var colorPicker = new jQuery.ColorPicker('.color-picker', {
+        color: initialHex,
         imagepath: '../images/',
         change: colorChanged
       });
+    }
+
+    $(function() {
+      getColor();
 
       $('.button-container__on-button').on('click', function(e) {
         setGreenLight(1);
