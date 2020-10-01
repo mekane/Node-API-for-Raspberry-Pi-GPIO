@@ -6,6 +6,7 @@
   "scripts": {
     "devel": "TEST=true npm start",
     "debug": "DEBUG=express:* npm start",
+    "start": "index.js",
     "test": "mocha -b"
   },
   "keywords": [

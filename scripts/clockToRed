@@ -1,2 +1,0 @@
-echo "Turning clock light Red"
-/home/marty/bin/setColorApi 255 0 0

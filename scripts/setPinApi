@@ -1,2 +1,2 @@
 echo "Set pin $1 to $2"
-curl -sLv --data-binary \{\"state\":\ $2\} -X PUT -H Content-Type:\ application/json "http://clock:3000/pin/$1"
+curl -sLv --data-binary \{\"state\":\ $2\} -X PUT -H Content-Type:\ application/json "http://localhost:8080/pin/$1"

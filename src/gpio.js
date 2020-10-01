@@ -13,10 +13,6 @@ const pin = {
   '23': new Gpio(23, OutputMode)
 };
 
-const redPin = pin['13'];
-const greenPin = pin['12'];
-const bluePin = pin['18'];
-
 function getAllPinStatuses() {
   const result = {};
   const allPinIds = Object.keys(pin);
@@ -64,24 +60,22 @@ function setPinStatus(pinId, newState) {
   }
 }
 
-function getColor() {
-  const redPwm = redPin.getPwmDutyCycle();
-  const greenPwm = greenPin.getPwmDutyCycle();
-  const bluePwm = bluePin.getPwmDutyCycle();
-
-  return {
-    red: 255 - redPwm,
-    green: 255 - greenPwm,
-    blue: 255 - bluePwm
-  }
+function getPinPwm(pinId) {
+  const gpioForPin = pin[pinId];
+  return gpioForPin.getPwmDutyCycle()
 }
 
-function setColor(redVal, greenVal, blueVal) {
+function setPinPwm(pinId, newVal) {
   //TODO: sanitize these values and clamp to 0-255
+  const gpioForPin = pin[pinId];
 
-  redPin.pwmWrite(255 - redVal);
-  greenPin.pwmWrite(255 - greenVal);
-  bluePin.pwmWrite(255 - blueVal);
+  if (gpioForPin /* && mode == 'OUTPUT' */) {
+    gpioForPin.pwmWrite(newVal);
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 function mockGpio() {
@@ -104,8 +98,8 @@ function loadGpioModule() {
 
 module.exports = {
   getAllPinStatuses,
-  getColor,
+  getPinPwm,
+  setPinPwm,
   getPinStatus,
-  setColor,
   setPinStatus
 };

@@ -35,18 +35,6 @@ function initialize(port) {
             path: '/pin/:id',
             description: 'Sets the status of a pin to on or off',
             handler: setPin
-        },
-        {
-            method: 'get',
-            path: '/color',
-            description: 'Gets the RGB value currently set',
-            handler: getColor
-        },
-        {
-            method: 'put',
-            path: '/color',
-            description: 'Sets the RGB value using JSON {red:<val>, green:<val>, blue:<val>}',
-            handler: setColor
         }
     ];
 
@@ -57,8 +45,6 @@ function initialize(port) {
     app.engine('mustache', require('mustache-express')());
     app.set('view engine', 'mustache')
 
-    gpio.setColor(0, 0, 0);
-    gpio.setPinStatus(23, 0);
     setupRouting();
     startServer();
 
@@ -126,26 +112,6 @@ function initialize(port) {
         const result = gpio.setPinStatus(pinId, newState);
 
         res.send(result);
-    }
-
-    function getColor(req, res) {
-        const rgb = gpio.getColor();
-
-        res.format({
-            html: () => res.render('rgbColor', {color: rgb}),
-            json: () => res.json(rgb)
-        })
-    }
-
-    function setColor(req, res) {
-        const body = req.body || {};
-        const red = body.red || 0;
-        const green = body.green || 0;
-        const blue = body.blue || 0;
-
-        gpio.setColor(red, green, blue);
-
-        res.send(`setColor(${red}, ${green}, ${blue})`);
     }
 }
 
