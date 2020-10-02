@@ -67,11 +67,12 @@
             const newState = !pinStates[id];
             return fetch(apiHost + `/pin/${id}`, {
                 method: 'put',
-                contentType: 'application/json',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
                     "state": newState
-                }),
-                dataType: 'json',
+                })
             })
                 .then(res => res.json())
                 .then(success => {
