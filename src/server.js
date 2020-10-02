@@ -3,13 +3,12 @@
 const accessLogger = require('./accessLogger');
 const express = require('express');
 const bodyParser = require('body-parser');
-const gpio = require('./gpio');
 
 //for accepts-content matching
 const html = 'text/html';
 const json = 'application/json';
 
-function initialize(port) {
+function initialize(port, gpio) {
 
     const routes = [
         {
@@ -93,6 +92,10 @@ function initialize(port) {
 
     function getPin(req, res) {
         const pinId = req.params['id'];
+
+        if (typeof pinId === 'undefined' || !pinId)
+            return;
+
         const pinStatus = gpio.getPinStatus(pinId);
 
         res.format({
