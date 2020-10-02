@@ -1,37 +1,93 @@
 <html>
 
 <head>
-  <title>Interactive GPIO</title>
-  <style>
-    .button-container,
-    .clock-container {
-      margin-top: 10vw;
-    }
+    <title>Interactive GPIO</title>
+    <style>
+        .buttons {
 
-    .button-container__header,
-    .clock-container__header {
-      font-size: 24px;
-      color: #999;
-    }
+        }
 
-    .button-container__on-button,
-    .button-container__off-button {
-      font-size: 24px;
-      height: 80px;
-      margin-top: 20px;
-      width: 50%;
-    }
-  </style>
+        button {
+            cursor: pointer;
+            display: block;
+            font-size: 24px;
+            margin: 0 auto 12px;
+            min-width: 800px;
+            padding: 36px;
+        }
+
+        button.on {
+            background-color: green;
+            color: white;
+        }
+    </style>
 </head>
 
 <body>
-  <h1>GPIO</h1>
+<h1>GPIO</h1>
+<div class="buttons">
 
-  <script>
-    var apiPath = 'http://' + location.host;
+</div>
+<script>
+    var apiHost = 'http://' + location.host;
 
+    const pinStates = {};
 
-  </script>
+    function get(path) {
+        return fetch(apiHost + path, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+            .then(res => res.json())
+    }
+
+    function setupButtons() {
+        const buttons = document.querySelector('.buttons');
+
+        get('/pin')
+            .then(pinData => {
+                console.log(pinData);
+                Object.keys(pinData).forEach(id => {
+                    pinStates[id] = !!pinData[id].level;
+                    const button = document.createElement('button');
+                    button.innerText = `Toggle ${id}`;
+                    button.addEventListener('click', makeToggleFunction(id));
+
+                    if (pinStates[id])
+                        button.classList.add('on');
+
+                    buttons.appendChild(button);
+                })
+            })
+    }
+
+    function makeToggleFunction(id) {
+        return e => {
+            const newState = !pinStates[id];
+            return fetch(apiHost + `/pin/${id}`, {
+                method: 'put',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    "state": newState
+                }),
+                dataType: 'json',
+            })
+                .then(res => res.json())
+                .then(success => {
+                    if (success) {
+                        console.log(`Done setting pin ${id}`);
+                        pinStates[id] = !pinStates[id];
+                        e.target.classList.toggle('on');
+                    } else {
+                        console.error(`Error setting pin ${id}`)
+                    }
+                })
+        }
+    }
+
+    setupButtons();
+</script>
 </body>
 
 </html>
