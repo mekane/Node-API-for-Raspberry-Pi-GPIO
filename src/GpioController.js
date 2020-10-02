@@ -20,6 +20,8 @@ function GpioController(GPIO, pinsToEnable) {
         mode: GPIO.OUTPUT
     };
 
+    console.log('gpio controller - init pins', pinsToEnable)
+
     Object.keys(pinsToEnable).forEach(pinId => {
         const pinNumber = parseInt(pinId, 10);
         const pinValue = pinsToEnable[pinId];
