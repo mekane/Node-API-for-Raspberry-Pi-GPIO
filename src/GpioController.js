@@ -25,7 +25,7 @@ function GpioController(GPIO, pinsToEnable) {
     Object.keys(pinsToEnable).forEach(pinId => {
         const pinNumber = parseInt(pinId, 10);
         const pinValue = pinsToEnable[pinId];
-        const mode = pinValue.toLowerCase() === 'input' ? InputMode : OutputMode;
+        const mode = !!pinValue ? OutputMode : InputMode;
 
         if (!isNaN(pinNumber)) {
             pin[pinNumber] = new GPIO(pinNumber, mode);

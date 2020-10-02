@@ -27,8 +27,8 @@ function loadGpioModule() {
         }
     }
 
-    mockGpio.INPUT = 'input';
-    mockGpio.OUTPUT = 'output';
+    mockGpio.INPUT = 0;
+    mockGpio.OUTPUT = 1;
 
     if (process.env['TEST'])
         return mockGpio;
