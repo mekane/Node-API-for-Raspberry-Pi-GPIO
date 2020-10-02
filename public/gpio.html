@@ -68,7 +68,7 @@
             return fetch(apiHost + `/pin/${id}`, {
                 method: 'put',
                 contentType: 'application/json',
-                data: JSON.stringify({
+                body: JSON.stringify({
                     "state": newState
                 }),
                 dataType: 'json',
