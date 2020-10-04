@@ -1,0 +1,97 @@
+<html>
+
+<head>
+    <title>Outlet Control</title>
+    <style>
+        body {
+            background: black;
+            color: white;
+            font-size: 24px;
+        }
+
+        .buttons {
+            display: flex;
+        }
+
+        button {
+            cursor: pointer;
+            flex: 1 1 auto;
+            font-size: 24px;
+            margin: 20px;
+            padding: 40px;
+        }
+
+        button.on {
+            background-color: blue;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+<div class="buttons">
+    <button type="button" class="left">Left Outlet</button>
+    <button type="button" class="right">Right Outlet</button>
+</div>
+<script>
+    var apiHost = 'http://' + location.host;
+
+    const outletStates = {
+        left: false,
+        right: false
+    };
+
+    function get(path) {
+        return fetch(apiHost + path, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+                .then(res => res.json())
+    }
+
+    function setupButtons() {
+        const leftButton = document.querySelector('.left');
+        leftButton.addEventListener('click', makeToggleFunction('left'));
+
+        const rightButton = document.querySelector('.right');
+        rightButton.addEventListener('click', makeToggleFunction('right'));
+
+        get('/outlets')
+                .then(outlets => {
+                    if (outlets['left']) {
+                        outletStates.left = true;
+                        leftButton.classList.add('on');
+                    }
+                    if (outlets['right']) {
+                        outletStates.right = true;
+                        rightButton.classList.add('on');
+                    }
+                })
+    }
+
+    function makeToggleFunction(id) {
+        return e => {
+            const newState = outletStates[id] ? 'Off' : 'On';
+            const path = `/${id}Outlet${newState}`;
+            return fetch(apiHost + path, {
+                method: 'put'
+            })
+                    .then(res => res.json())
+                    .then(success => {
+                        if (success) {
+                            console.log(`Done setting outlet ${path}`);
+                            outletStates[id] = !outletStates[id];
+                            e.target.classList.toggle('on');
+                        } else {
+                            console.error(`Error setting ${path}`);
+                        }
+                    })
+        }
+    }
+
+    setupButtons();
+</script>
+</body>
+
+</html>

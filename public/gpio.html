@@ -47,7 +47,6 @@
 
         get('/pin')
             .then(pinData => {
-                console.log(pinData);
                 Object.keys(pinData).forEach(id => {
                     pinStates[id] = !!pinData[id].level;
                     const button = document.createElement('button');

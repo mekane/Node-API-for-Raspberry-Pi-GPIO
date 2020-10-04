@@ -8,7 +8,7 @@ const bodyParser = require('body-parser');
 const html = 'text/html';
 const json = 'application/json';
 
-function initialize(port, gpio) {
+function initialize(port, gpio, useCases) {
 
     const routes = [
         {
@@ -45,6 +45,9 @@ function initialize(port, gpio) {
     app.set('view engine', 'mustache')
 
     setupRouting();
+
+    useCases.forEach(uc => uc.initialize(app, gpio));
+
     startServer();
 
     function setupRouting() {

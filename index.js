@@ -12,7 +12,12 @@ const pins = {
     '24': gpio.OUTPUT
 };
 const controller = GpioController(gpio, pins);
-server.initialize(8080, controller);
+
+const useCases = [
+    require('./src/useCases/outlet')
+]
+
+server.initialize(8080, controller, useCases);
 
 
 function loadGpioModule() {
