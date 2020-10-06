@@ -10,15 +10,14 @@ The bash scripts in `scripts/` are for crontab to reference so it can do the app
 
 ## example contab:
 
-# Every Weekday: Turn on the heater (left outlet) at 8pm
+# Weekday evenings: Turn the heater on at 8pm until 10pm
 0 20 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/leftOutletOn.sh
-
-# Every Weekday: Turn off the heater at 10pm
 0 22 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/leftOutletOff.sh
 
-
-# Every Weekday: Turn on the fan (right outlet) at 9pm
+# Weekday evenings: Turn the fan on at 9pm until 7am the next morning (if the next day is also a week day)
 0 20 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/rightOutletOn.sh
+0  7 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/rightOutletOn.sh
 
-# Every Weekday: Turn off the fan at 7am
-0 7 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/rightOutletOn.sh
+# Weekday mornings: Turn the heater on at 6am until 7am
+0  6 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/leftOutletOn.sh
+0  7 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/leftOutletOff.sh
