@@ -14,6 +14,7 @@ const pins = {
 const controller = GpioController(gpio, pins);
 
 const useCases = [
+    //require('./src/useCases/example'),
     require('./src/useCases/outlet')
 ]
 

@@ -3,6 +3,7 @@
 const accessLogger = require('./accessLogger');
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 //for accepts-content matching
 const html = 'text/html';
@@ -10,7 +11,7 @@ const json = 'application/json';
 
 function initialize(port, gpio, useCases) {
 
-    const routes = [
+    const baseRoutes = [
         {
             method: 'get',
             path: '/',
@@ -44,27 +45,40 @@ function initialize(port, gpio, useCases) {
     app.engine('mustache', require('mustache-express')());
     app.set('view engine', 'mustache')
 
-    setupRouting();
+    setupRouting(baseRoutes);
+    useCases.forEach(useCase => setupRouting(useCase.initialize(gpio)));
 
-    useCases.forEach(uc => uc.initialize(app, gpio));
+    setupUseCaseViews();
 
     startServer();
 
-    function setupRouting() {
+    function setupRouting(routes) {
         routes.forEach(route => app[route.method](route.path, route.handler));
+    }
+
+    function setupUseCaseViews() {
+        const useCaseViewPaths = [app.get('views')];
+        useCases.forEach(useCase => {
+            if (typeof useCase.getViewsPath === 'function') {
+                const viewPath = path.resolve('src/useCases', useCase.getViewsPath());
+                console.log('  add view path ' + viewPath);
+                useCaseViewPaths.push(viewPath)
+            }
+        })
+        app.set('views', useCaseViewPaths);
     }
 
     function startServer() {
         app.listen(port, () => console.log(`GPIO app listening on port ${port}!`));
     }
 
-
     function getAllRouteDescriptions(req, res) {
-        const routeInfo = routes.map(route => ({
+        const routeInfo = baseRoutes.map(route => ({
             method: route.method,
             path: route.path,
             description: route.description
         }));
+        //TODO: add use case routes too
 
         res.format({
             html: () => res.render('allRouteDescriptions', {
