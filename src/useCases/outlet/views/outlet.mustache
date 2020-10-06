@@ -14,24 +14,28 @@
         }
 
         button {
+            background: #666;
+            border: 2px solid black;
             cursor: pointer;
             flex: 1 1 auto;
-            font-size: 24px;
+            font-size: 48px;
+            font-weight: bold;
             margin: 20px;
+            outline: none;
             padding: 40px;
         }
 
         button.on {
-            background-color: blue;
-            color: white;
+            background-color: #11a;
+            color: #ddd;
         }
     </style>
 </head>
 
 <body>
 <div class="buttons">
-    <button type="button" class="left">Left Outlet</button>
-    <button type="button" class="right">Right Outlet</button>
+    <button type="button" class="left">Heater</button>
+    <button type="button" class="right">Fan</button>
 </div>
 <script>
     var apiHost = 'http://' + location.host;
