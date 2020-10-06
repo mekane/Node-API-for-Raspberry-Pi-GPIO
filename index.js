@@ -18,7 +18,9 @@ const useCases = [
     require('./src/useCases/outlet')
 ]
 
-server.initialize(8080, controller, useCases);
+const port = (process.env['TEST'] ? 8080 : 80); //change this if you want a different port
+
+server.initialize(port, controller, useCases);
 
 
 function loadGpioModule() {

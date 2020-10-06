@@ -1,4 +1,4 @@
 #! /bin/bash
 
 echo "Turning LEFT outlet ON"
-curl -sLv -X PUT "http://localhot/leftOutletOn"
+curl -sLv -X PUT "http://localhost/leftOutletOn"
