@@ -16,7 +16,7 @@ The bash scripts in `scripts/` are for crontab to reference so it can do the app
 
 # Weekday evenings: Turn the fan on at 9pm until 7am the next morning (if the next day is also a week day)
 0 20 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/rightOutletOn.sh
-0  7 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/rightOutletOn.sh
+0  7 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/rightOutletOff.sh
 
 # Weekday mornings: Turn the heater on at 6am until 7am
 0  6 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/leftOutletOn.sh
