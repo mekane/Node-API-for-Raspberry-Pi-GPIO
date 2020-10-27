@@ -1,7 +1,7 @@
-const leftLed = 15;
+const leftLed = 14;
 const leftOutlet = 24;
 
-const rightLed = 14;
+const rightLed = 15;
 const rightOutlet = 23;
 
 function getViewsPath() {
