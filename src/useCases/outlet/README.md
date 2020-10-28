@@ -8,7 +8,7 @@ just convenient api endpoints that wrap the right gpio pin operations.
 
 The bash scripts in `scripts/` are for crontab to reference so it can do the appropriate thing at scheduled times.
 
-## example contab:
+## example crontab:
 
 # Weekday evenings: Turn the heater on at 8pm until 10pm
 0 20 * * 1-5 /home/pi/Node-API-for-Raspberry-Pi-GPIO/src/useCases/outlet/scripts/leftOutletOn.sh
