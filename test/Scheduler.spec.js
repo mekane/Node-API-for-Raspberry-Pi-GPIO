@@ -98,6 +98,21 @@ describe('the Scheduler', () => {
         ]);
     })
 
+    it('can return a list of all scheduled jobs', () => {
+        const persistenceSpy = PersistenceSpy();
+        const scheduler = Scheduler(persistenceSpy);
+
+        scheduler.scheduleTask(10, {a: 1});
+        scheduler.scheduleTask(11, {a: 2});
+        scheduler.scheduleTask(12, {a: 3});
+
+        expect(scheduler.getAllTasks(11)).to.deep.equal([
+            {time: 10, action: {a: 1}},
+            {time: 11, action: {a: 2}},
+            {time: 12, action: {a: 3}}
+        ])
+    })
+
     it('can return a list of jobs whose timestamps are in the past', () => {
         const persistenceSpy = PersistenceSpy();
         const scheduler = Scheduler(persistenceSpy);
@@ -109,6 +124,38 @@ describe('the Scheduler', () => {
         expect(scheduler.getTasksToRun(11)).to.deep.equal([
             {time: 10, action: {a: 1}},
             {time: 11, action: {a: 2}}
+        ])
+    })
+
+    it('can remove a scheduled item by timestamp', () => {
+        const persistenceSpy = PersistenceSpy();
+        const scheduler = Scheduler(persistenceSpy);
+
+        scheduler.scheduleTask(10, {a: 1});
+        scheduler.scheduleTask(11, {a: 2});
+        scheduler.scheduleTask(12, {a: 3});
+
+        scheduler.removeTask(12);
+        expect(scheduler.getAllTasks()).to.deep.equal([
+            {time: 10, action: {a: 1}},
+            {time: 11, action: {a: 2}}
+        ])
+    })
+
+    it('removes any and all entries matching the timestamp', () => {
+        const persistenceSpy = PersistenceSpy();
+        const scheduler = Scheduler(persistenceSpy);
+
+        scheduler.scheduleTask(12, {a: 0});
+        scheduler.scheduleTask(10, {a: 1});
+        scheduler.scheduleTask(12, {a: 2});
+        scheduler.scheduleTask(11, {a: 3});
+        scheduler.scheduleTask(12, {a: 4});
+
+        scheduler.removeTask(12);
+        expect(scheduler.getAllTasks()).to.deep.equal([
+            {time: 10, action: {a: 1}},
+            {time: 11, action: {a: 3}}
         ])
     })
 })

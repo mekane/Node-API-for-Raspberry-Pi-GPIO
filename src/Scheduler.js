@@ -29,9 +29,19 @@ function Scheduler(persistence) {
     if (typeof persistence.getJson !== 'function' || typeof persistence.putJson !== 'function')
         throw new Error('Invalid persistence module passed to Schedule')
 
+    function getAllTasks() {
+        return persistence.getJson() || [];
+    }
+
     function getTasksToRun(startTime) {
         const jobs = persistence.getJson() || [];
         return jobs.filter(j => j.time <= startTime);
+    }
+
+    function removeTask(timestamp) {
+        const jobs = persistence.getJson() || [];
+        const updated = jobs.filter(j => j.time !== timestamp);
+        persistence.putJson(updated);
     }
 
     function scheduleTask(time, action) {
@@ -48,7 +58,9 @@ function Scheduler(persistence) {
     }
 
     return {
+        getAllTasks,
         getTasksToRun,
+        removeTask,
         scheduleTask
     }
 
