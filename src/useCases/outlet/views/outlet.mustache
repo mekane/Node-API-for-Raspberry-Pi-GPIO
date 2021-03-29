@@ -29,6 +29,16 @@
             background-color: #11a;
             color: #ddd;
         }
+
+        ol {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            padding-bottom: 4px;
+        }
     </style>
 </head>
 
@@ -37,8 +47,13 @@
     <button type="button" class="left">Heater</button>
     <button type="button" class="right">Fan</button>
 </div>
+<button type="button" class="runLeftFor30">Run for 30 Minutes</button>
+<div class="schedule">
+    <header>Schedule</header>
+    <ol class="jobList"></ol>
+</div>
 <script>
-    var apiHost = 'http://' + location.host;
+    const apiHost = 'http://' + location.host;
 
     const outletStates = {
         left: false,
@@ -61,6 +76,9 @@
         const rightButton = document.querySelector('.right');
         rightButton.addEventListener('click', makeToggleFunction('right'));
 
+        const runLeftFor30Button = document.querySelector('.runLeftFor30');
+        runLeftFor30Button.addEventListener('click', scheduledRunLeftFor30Task)
+
         get('/outlets')
                 .then(outlets => {
                     if (outlets['left']) {
@@ -74,6 +92,35 @@
                 })
     }
 
+    function refreshSchedule() {
+        get('/schedule')
+                .then(list => {
+                    const jobList = document.querySelector('.jobList');
+
+                    //clear old list
+                    while (jobList.firstChild) {
+                        jobList.removeChild(jobList.firstChild);
+                    }
+
+                    list.forEach(job => {
+                        const li = document.createElement('li');
+                        li.innerText = `${formatDate(job.time)}: ${job.action.path}`;
+                        jobList.appendChild(li);
+                    })
+                })
+    }
+
+    function scheduledRunLeftFor30Task(e) {
+        return fetch(apiHost + '/schedule?minutes=30&action=leftOutletOff', {
+            method: 'put',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+                .then(res => res.json())
+                .then(refreshSchedule)
+    }
+
     function makeToggleFunction(id) {
         return e => {
             const newState = outletStates[id] ? 'Off' : 'On';
@@ -84,7 +131,6 @@
                     .then(res => res.json())
                     .then(success => {
                         if (success) {
-                            console.log(`Done setting outlet ${path}`);
                             outletStates[id] = !outletStates[id];
                             e.target.classList.toggle('on');
                         } else {
@@ -94,7 +140,15 @@
         }
     }
 
+    function formatDate(timestamp) {
+        const date = new Date(timestamp);
+        const ampm = date.getHours() > 12 ? 'pm' : 'am'
+        const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+        return `${hours}:${date.getMinutes()}${ampm}`
+    }
+
     setupButtons();
+    refreshSchedule();
 </script>
 </body>
 
