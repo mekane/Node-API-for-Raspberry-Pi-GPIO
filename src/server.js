@@ -9,7 +9,7 @@ const path = require('path');
 const html = 'text/html';
 const json = 'application/json';
 
-function initialize(port, gpio, useCases) {
+function initialize(port, gpio, useCases, scheduler) {
 
     const baseRoutes = [
         {
@@ -35,6 +35,18 @@ function initialize(port, gpio, useCases) {
             path: '/pin/:id',
             description: 'Sets the status of a pin to on or off',
             handler: setPin
+        },
+        {
+            method: 'put',
+            path: '/schedule',
+            description: 'Save a task to be run at a later time',
+            handler: scheduleTask
+        },
+        {
+            method: 'get',
+            path: '/schedule',
+            description: 'List the tasks to be scheduled',
+            handler: listScheduledTasks
         }
     ];
 
@@ -132,6 +144,24 @@ function initialize(port, gpio, useCases) {
         const result = gpio.setPinStatus(pinId, newState);
 
         res.send(result);
+    }
+
+    function scheduleTask(req, res) {
+        const minutesFromNowText = req.query['minutes'];
+        const actionText = req.query['action'];
+
+        const minutesFromNow = parseInt(minutesFromNowText);
+        const currentTime = Date.now();
+        const scheduleTime = currentTime + minutesFromNow * 60000;
+
+        const action = {path: actionText};
+
+        scheduler.scheduleTask(scheduleTime, action);
+        res.send({success: true, message: `Task scheduled for ${minutesFromNow} minutes from now`});
+    }
+
+    function listScheduledTasks(req, res) {
+        res.json(scheduler.getAllTasks())
     }
 }
 

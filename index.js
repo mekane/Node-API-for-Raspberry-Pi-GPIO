@@ -2,8 +2,9 @@
 
 const server = require('./src/server');
 
-const {GpioController} = require('./src/GpioController');
+const port = (process.env['TEST'] ? 8080 : 80); //change this if you want a different port
 
+const {GpioController} = require('./src/GpioController');
 const gpio = loadGpioModule();
 const pins = {
     '14': gpio.OUTPUT,
@@ -18,9 +19,10 @@ const useCases = [
     require('./src/useCases/outlet')
 ]
 
-const port = (process.env['TEST'] ? 8080 : 80); //change this if you want a different port
+const {Scheduler, FilePersistence} = require('./src/Scheduler.js');
+const scheduler = Scheduler(FilePersistence('./schedule.json'));
 
-server.initialize(port, controller, useCases);
+server.initialize(port, controller, useCases, scheduler);
 
 
 function loadGpioModule() {
