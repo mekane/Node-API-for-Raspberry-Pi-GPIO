@@ -154,6 +154,11 @@ function initialize(port, gpio, useCases, scheduler) {
         const currentTime = Date.now();
         const scheduleTime = currentTime + minutesFromNow * 60000;
 
+        if (isNaN(minutesFromNow) || isNaN(scheduleTime)) {
+            res.status(400).send('Bad minutes parameter');
+            return;
+        }
+
         const action = {path: actionText};
 
         scheduler.scheduleTask(scheduleTime, action);
