@@ -41,7 +41,9 @@ async function processTasks(currentTime) {
                 tasksToRemove.push(task);
         });
         await Promise.all(tasks);
-        console.log(`Done running ${tasksToRun.length} tasks / ${allTasksCount} pending`)
+        const tasksRun = tasksToRun.length;
+        const tasksPending = allTasksCount - tasksRun;
+        console.log(`Done running ${tasksRun} tasks / ${tasksPending} pending`)
 
         tasksToRemove.forEach(task => scheduler.removeTask(task.time));
         console.log('removed ' + tasksToRemove.length + ' tasks that successfully ran')
