@@ -2,7 +2,17 @@
 
 const server = require('./src/server');
 
-const port = (process.env['TEST'] ? 8080 : 80); //change this if you want a different port
+let defaultConfig = {
+    port: 80,
+    scheduleFile: './schedule.json'
+}
+let customConfig = {};
+try {
+    customConfig = require('./config.json');
+} catch (error) {
+    console.warn('Warning: missing config.json - using defaults')
+}
+const config = Object.assign(defaultConfig, customConfig);
 
 const {GpioController} = require('./src/GpioController');
 const gpio = loadGpioModule();
@@ -20,9 +30,9 @@ const useCases = [
 ]
 
 const {Scheduler, FilePersistence} = require('./src/Scheduler.js');
-const scheduler = Scheduler(FilePersistence('./schedule.json'));
+const scheduler = Scheduler(FilePersistence(config.scheduleFile));
 
-server.initialize(port, controller, useCases, scheduler);
+server.initialize(config.port, controller, useCases, scheduler);
 
 
 function loadGpioModule() {
