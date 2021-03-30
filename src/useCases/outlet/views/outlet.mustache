@@ -48,6 +48,7 @@
     <button type="button" class="right">Fan</button>
 </div>
 <button type="button" class="runLeftFor30">Run for 30 Minutes</button>
+<button type="button" class="runRightFor5">Off in 5 Minutes</button>
 <div class="schedule">
     <header>Schedule</header>
     <ol class="jobList"></ol>
@@ -78,6 +79,9 @@
 
         const runLeftFor30Button = document.querySelector('.runLeftFor30');
         runLeftFor30Button.addEventListener('click', scheduledRunLeftFor30Task)
+
+        const runRightFor5Button = document.querySelector('.runRightFor5');
+        runRightFor5Button.addEventListener('click', scheduleRunRightFor5)
 
         get('/outlets')
                 .then(outlets => {
@@ -112,6 +116,17 @@
 
     function scheduledRunLeftFor30Task(e) {
         return fetch(apiHost + '/schedule?minutes=30&action=leftOutletOff', {
+            method: 'put',
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+                .then(res => res.json())
+                .then(refreshSchedule)
+    }
+
+    function scheduleRunRightFor5(e) {
+        return fetch(apiHost + '/schedule?minutes=5&action=rightOutletOff', {
             method: 'put',
             headers: {
                 'Accept': 'application/json'
