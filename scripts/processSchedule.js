@@ -19,7 +19,9 @@ const config = Object.assign(defaultConfig, customConfig);
 
 const apiHost = `http://localhost:${config.port}/`;
 
-const scheduler = Scheduler(FilePersistence(config.scheduleFile));
+const scheduleFilePath = path.resolve(__dirname, config.scheduleFile);
+console.log(`Loading schedule from ${scheduleFilePath}`)
+const scheduler = Scheduler(FilePersistence(scheduleFilePath));
 
 const currentTime = Date.now();
 logTime(currentTime);
@@ -27,6 +29,7 @@ processTasks(currentTime);
 
 
 async function processTasks(currentTime) {
+    const allTasksCount = scheduler.getAllTasks().length;
     const tasksToRun = scheduler.getTasksToRun(currentTime);
     const tasksToRemove = [];
 
@@ -38,12 +41,12 @@ async function processTasks(currentTime) {
                 tasksToRemove.push(task);
         });
         await Promise.all(tasks);
-        console.log('Done running all tasks')
+        console.log(`Done running ${tasksToRun.length} tasks / ${allTasksCount} pending`)
 
         tasksToRemove.forEach(task => scheduler.removeTask(task.time));
         console.log('removed ' + tasksToRemove.length + ' tasks that successfully ran')
     } else
-        console.log('No Tasks To Run')
+        console.log(`No Tasks To Run now / ${allTasksCount} pending`)
 }
 
 async function runTask(task) {
