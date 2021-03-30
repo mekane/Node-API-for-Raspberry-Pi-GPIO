@@ -32,10 +32,19 @@ and will start automatically when the system boots up. This is nice in case the 
    * To stop, start or restart the service use the `service` command: `sudo service nodeGpio restart`
    * To view the service logs use `sudo journalctl -u nodeGpio`
 
- ### Set up cron
+### Set up cron
 
 Cron jobs can combine very well with the service to automate whatever devices and tasks it is controlling. To edit the
 cron table, use `crontab -e` which will open a special editor. See the README file in src/useCases/outlet/ for an
 example cron setup.
  
 Use `cat /var/log/syslog | grep cron` to see output from cron-related logs.
+
+## Scheduler
+
+The api now includes a built-in schedule system. It is used by posting to /schedule with
+a number of minutes and an api path. The scheduler will recognize when the task is ready to run.
+There is a script in scripts/ called processSchedule that is meant to be combined with a
+cron job to run frequently (once a minute is good) to check for and process scheduled tasks.
+
+`* * * * * node /home/pi/Node-API-for-Raspberry-Pi-GPIO/scripts/processSchedule.js`
