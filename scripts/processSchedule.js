@@ -1,3 +1,5 @@
+#! /usr/bin/node
+
 // Init a Scheduler, get tasks to run, attempt to run them and remove any that are done
 const path = require('path');
 const fetch = require('node-fetch');
