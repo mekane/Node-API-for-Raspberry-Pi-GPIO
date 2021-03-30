@@ -19,7 +19,7 @@ const config = Object.assign(defaultConfig, customConfig);
 
 const apiHost = `http://localhost:${config.port}/`;
 
-const scheduleFilePath = path.resolve(__dirname, config.scheduleFile);
+const scheduleFilePath = path.resolve(__dirname, '..', config.scheduleFile);
 console.log(`Loading schedule from ${scheduleFilePath}`)
 const scheduler = Scheduler(FilePersistence(scheduleFilePath));
 
