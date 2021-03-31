@@ -47,14 +47,17 @@
     <button type="button" class="left">Pump</button>
     <button type="button" class="right">Light</button>
 </div>
-<button type="button" class="runLeftFor30">Run for 30 Minutes</button>
-<button type="button" class="runRightFor5">Off in 5 Minutes</button>
+<button type="button" class="runLeftFor5">Pump for 5 Minutes</button>
+<button type="button" class="runLeftFor30">Pump for 30 Minutes</button>
 <div class="schedule">
     <header>Schedule</header>
     <ol class="jobList"></ol>
 </div>
 <script>
     const apiHost = 'http://' + location.host;
+
+    const leftButton = document.querySelector('.left');
+    const rightButton = document.querySelector('.right');
 
     const outletStates = {
         left: false,
@@ -70,28 +73,35 @@
                 .then(res => res.json())
     }
 
+
     function setupButtons() {
-        const leftButton = document.querySelector('.left');
         leftButton.addEventListener('click', makeToggleFunction('left'));
 
-        const rightButton = document.querySelector('.right');
         rightButton.addEventListener('click', makeToggleFunction('right'));
 
+        const runLeftFor5Button = document.querySelector('.runLeftFor5');
+        runLeftFor5Button.addEventListener('click', scheduleRunLeftFor5)
+
         const runLeftFor30Button = document.querySelector('.runLeftFor30');
-        runLeftFor30Button.addEventListener('click', scheduledRunLeftFor30Task)
+        runLeftFor30Button.addEventListener('click', scheduleRunLeftFor30)
+    }
 
-        const runRightFor5Button = document.querySelector('.runRightFor5');
-        runRightFor5Button.addEventListener('click', scheduleRunRightFor5)
-
+    function refreshOutletStates() {
         get('/outlets')
                 .then(outlets => {
+                    outletStates.left = outlets['left'];
+                    outletStates.right = outlets['right'];
+
                     if (outlets['left']) {
-                        outletStates.left = true;
                         leftButton.classList.add('on');
+                    } else {
+                        leftButton.classList.remove('on');
                     }
+
                     if (outlets['right']) {
-                        outletStates.right = true;
                         rightButton.classList.add('on');
+                    } else {
+                        rightButton.classList.remove('on');
                     }
                 })
     }
@@ -114,27 +124,24 @@
                 })
     }
 
-    function scheduledRunLeftFor30Task(e) {
-        return fetch(apiHost + '/schedule?minutes=30&action=leftOutletOff', {
-            method: 'put',
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-                .then(res => res.json())
+    function scheduleRunLeftFor5(e) {
+        return fetch(apiHost + '/leftOutletOn', {method: 'put'})
+                .then(refreshOutletStates)
+                .then(function () {
+                    return fetch(apiHost + '/schedule?minutes=5&action=rightOutletOff', {method: 'put'})
+                })
                 .then(refreshSchedule)
     }
 
-    function scheduleRunRightFor5(e) {
-        return fetch(apiHost + '/schedule?minutes=5&action=rightOutletOff', {
-            method: 'put',
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-                .then(res => res.json())
+    function scheduleRunLeftFor30(e) {
+        return fetch(apiHost + '/leftOutletOn', {method: 'put'})
+                .then(refreshOutletStates)
+                .then(function () {
+                    return fetch(apiHost + '/schedule?minutes=30&action=leftOutletOff', {method: 'put',})
+                })
                 .then(refreshSchedule)
     }
+
 
     function makeToggleFunction(id) {
         return e => {
