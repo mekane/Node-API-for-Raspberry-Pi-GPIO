@@ -164,12 +164,15 @@
 
     function formatDate(timestamp) {
         const date = new Date(timestamp);
-        const ampm = date.getHours() >= 12 ? 'pm' : 'am'
-        const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-        return `${hours}:${date.getMinutes()}${ampm}`
+        const hours24 = date.getHours();
+        const ampm = hours24 >= 12 ? 'pm' : 'am';
+        const hours = hours24 > 12 ? hours24 - 12 : hours24;
+        const minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
+        return `${hours}:${minutes}${ampm}`
     }
 
     setupButtons();
+    refreshOutletStates();
     refreshSchedule();
 </script>
 </body>
