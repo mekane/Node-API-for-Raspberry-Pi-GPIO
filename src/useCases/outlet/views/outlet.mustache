@@ -135,7 +135,7 @@
         return fetch(apiHost + '/leftOutletOn', {method: 'put'})
                 .then(refreshOutletStates)
                 .then(function () {
-                    return fetch(apiHost + '/schedule?minutes=5&action=rightOutletOff', {method: 'put'})
+                    return fetch(apiHost + '/schedule?minutes=5&action=leftOutletOff', {method: 'put'})
                 })
                 .then(refreshSchedule)
     }
