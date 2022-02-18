@@ -103,6 +103,7 @@
                     } else {
                         rightButton.classList.remove('on');
                     }
+                    console.log('outlets updated');
                 })
     }
 
@@ -121,7 +122,13 @@
                         li.innerText = `${formatDate(job.time)}: ${job.action.path}`;
                         jobList.appendChild(li);
                     })
+                    console.log('schedule updated');
                 })
+    }
+
+    function refreshAll() {
+      refreshOutletStates();
+      refreshSchedule();
     }
 
     function scheduleRunLeftFor5(e) {
@@ -172,8 +179,10 @@
     }
 
     setupButtons();
-    refreshOutletStates();
-    refreshSchedule();
+
+    refreshAll();
+
+    setInterval(refreshAll, 5000);
 </script>
 </body>
 
